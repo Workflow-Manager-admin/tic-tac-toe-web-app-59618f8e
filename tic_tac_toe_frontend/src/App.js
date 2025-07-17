@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import About from "./About";
 import './App.css';
 
 // Theme colors—these should match what's in App.css and the requirement
@@ -34,8 +36,10 @@ const WINNING_LINES = [
   [[0,2],[1,1],[2,0]]
 ];
 
-// PUBLIC_INTERFACE
-function App() {
+/**
+ * GamePage defines the original game UI as a child component, so <App /> shell holds navigation/routing.
+ */
+function GamePage() {
   const [theme] = useState('light'); // Only light theme as requested
   const [board, setBoard] = useState(emptyBoard());
   const [nextPlayer, setNextPlayer] = useState("X");
@@ -225,6 +229,65 @@ function App() {
         </button>
       </div>
     </div>
+  );
+}
+
+/**
+ * App shell with top navbar and main router logic.
+ */
+// PUBLIC_INTERFACE
+function App() {
+  return (
+    <BrowserRouter>
+      <nav
+        className="navbar"
+        style={{
+          width: "100%",
+          background: "var(--bg-secondary, #F4F6FB)",
+          padding: "12px 0",
+          borderBottom: "1px solid var(--border-color, #E0E6EF)",
+          display: "flex",
+          gap: "24px",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "sticky",
+          top: 0,
+          zIndex: 99,
+        }}
+      >
+        <Link
+          to="/"
+          style={{
+            color: "var(--primary, #1976D2)",
+            textDecoration: "none",
+            fontWeight: 800,
+            fontSize: "1.1rem",
+            letterSpacing: 1,
+            marginRight: 12
+          }}
+        >
+          Tic Tac Toe
+        </Link>
+        <Link
+          to="/about"
+          style={{
+            color: "var(--text-secondary, #424242)",
+            textDecoration: "none",
+            fontWeight: 500,
+            fontSize: "1rem",
+            letterSpacing: 1
+          }}
+        >
+          About
+        </Link>
+      </nav>
+      <Routes>
+        <Route path="/" element={<GamePage />} />
+        <Route path="/about" element={<About />} />
+        {/* For anything else, redirect to / */}
+        <Route path="*" element={<GamePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
